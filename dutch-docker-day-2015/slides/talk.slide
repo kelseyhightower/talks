@@ -1,0 +1,16 @@
+Containers, Swarm, and Kubernetes
+
+Kelsey Hightower
+Google Cloud Platform
+kelsey.hightower@gmail.com
+@kelseyhightower
+
+* Containers are fancy application packages and a way to describe runtime details.
+
+* Compute resource utilization is the key to utility computing. Not containers. 
+
+* Automation (task) and orchestration (process) are not the same things.
+
+* Docker Swarm allows you to treat a pool of Docker hosts like a single machine. 
+
+* Kubernetes handles scheduling onto a compute cluster and actively manages workloads to match desired state.
