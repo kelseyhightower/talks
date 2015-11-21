@@ -1,0 +1,1 @@
+kubectl rolling-update --update-period=1s --image=kelseyhightower/lobsters:1.0.1 lobsters

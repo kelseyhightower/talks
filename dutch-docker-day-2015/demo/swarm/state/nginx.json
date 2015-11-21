@@ -1,0 +1,5 @@
+{
+  "Name": "nginx",
+  "Image": "nginx:1.9.6",
+  "Count": 5
+}

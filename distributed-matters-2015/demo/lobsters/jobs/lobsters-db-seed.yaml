@@ -1,0 +1,24 @@
+apiVersion: extensions/v1beta1
+kind: Job
+metadata:
+  name: lobsters-db-seed
+spec:
+  selector:
+    matchLabels:
+      task: db-seed
+  template:
+    metadata:
+      name: lobsters-db-seed
+      labels:
+        task: db-seed
+    spec:
+      containers:
+        - name: lobsters
+          image: kelseyhightower/lobsters:1.0.0
+          env:
+            - name: DATABASE_URL
+              value: "mysql2://lobster:linux@10.31.240.125:3306/lobster"
+          command:
+            - "/usr/local/bundle/bin/rake"
+            - "db:seed"
+      restartPolicy: Never

@@ -1,0 +1,39 @@
+apiVersion: v1
+kind: ReplicationController
+metadata:
+  labels:
+    app: mysql
+  name: mysql
+spec:
+  replicas: 1
+  selector:
+    app: mysql
+  template:
+    metadata:
+      labels:
+        app: mysql
+      name: mysql
+    spec:
+      containers:
+        - name: mysql
+          image: mysql/mysql-server:5.6
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              value: lobster
+            - name: MYSQL_PASSWORD
+              value: linux
+            - name: MYSQL_USER
+              value: lobster
+            - name: MYSQL_DATABASE
+              value: lobster
+          ports:
+            - name: mysql
+              containerPort: 3306
+          volumeMounts:
+            - mountPath: /var/lib/mysql
+              name: mysql-data
+      volumes:
+      - name: "mysql-data"
+        gcePersistentDisk:
+          pdName: mysql-data
+          fsType: ext4

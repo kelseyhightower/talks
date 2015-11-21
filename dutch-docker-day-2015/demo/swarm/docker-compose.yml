@@ -1,0 +1,2 @@
+nginx:
+  image: nginx:1.9.6

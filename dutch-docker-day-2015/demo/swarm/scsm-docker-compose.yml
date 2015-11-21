@@ -1,0 +1,13 @@
+swarm-cluster-state-manager:
+  container_name: swarm-cluster-state-manager
+  image: kelseyhightower/swarm-cluster-state-manager
+  volumes:
+    - /etc/docker:/etc/docker
+  command: |
+    --addr=0.0.0.0:3476
+    --swarm-manager="tcp://104.197.39.197:3376"
+    --tlscacert="/etc/docker/ca.pem"
+    --tlscert="/etc/docker/server.pem"
+    --tlskey="/etc/docker/server-key.pem"
+  ports:
+    - "3476:3476"

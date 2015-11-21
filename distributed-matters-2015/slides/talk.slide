@@ -1,0 +1,23 @@
+Redefining the cloud one container at a time
+Distributed Matters 
+
+Kelsey Hightower
+Google Cloud Platform
+kelsey.hightower@gmail.com
+@kelseyhightower
+
+* Distributed computing has gone mainstream.
+
+* Containers abstract away the gory details of application packaging and runtime semantics.
+
+* Resource utilization is the key to utility computing. Not containers. 
+
+* The datacenter is the computer but rather useless without an API.
+
+* Network attached storage can decouple applications from machines.
+
+* Consistent data stores enable reliable communication and coordination.
+
+* Schedulers enable intelligent deployments and self-healing. 
+
+* What kind of system can we build if we utilize all those things?
