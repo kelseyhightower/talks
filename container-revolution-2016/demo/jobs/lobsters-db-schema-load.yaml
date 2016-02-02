@@ -1,0 +1,24 @@
+apiVersion: extensions/v1beta1
+kind: Job
+metadata:
+  name: lobsters-db-schema-load
+spec:
+  selector:
+    matchLabels:
+      task: db-schema-load
+  template:
+    metadata:
+      name: lobsters-db-schema-load
+      labels:
+        task: db-schema-load
+    spec:
+      containers:
+        - name: lobsters
+          image: kelseyhightower/lobsters:1.0.0
+          env:
+            - name: DATABASE_URL
+              value: "mysql2://lobster:linux@mysql.default.svc.cluster.local:3306/lobster"
+          command:
+            - "/usr/local/bundle/bin/rake"
+            - "db:schema:load"
+      restartPolicy: Never
