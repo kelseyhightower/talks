@@ -6,3 +6,4 @@ kubectl delete configmap nginx-ghost
 kubectl delete deployments ghost
 kubectl delete service ghost
 kubectl delete ingress ghost
+gcloud compute firewall-rules delete allow-130-211-0-0-22

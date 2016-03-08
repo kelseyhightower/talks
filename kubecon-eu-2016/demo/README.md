@@ -26,7 +26,7 @@ ls -1 tls/
 ```
 ca.crt
 tls.crt
-database-ca.pem
+database-ca.crt
 tls.key
 ```
 
@@ -58,7 +58,7 @@ Data
 ====
 tls.key:         1679 bytes
 ca.crt:          1363 bytes
-database-ca.pem: 1146 bytes
+database-ca.crt: 1146 bytes
 tls.crt:         1440 bytes
 ```
 
@@ -66,6 +66,14 @@ tls.crt:         1440 bytes
 
 ```
 kubectl create secret generic ghost --from-file=configs/config.js 
+```
+
+```
+secret "ghost-tls" created
+```
+
+```
+kubectl describe secret ghost
 ```
 
 ### Store the Ghost Nginx config in configmap
@@ -80,16 +88,29 @@ kubectl create configmap nginx-ghost --from-file=configs/ghost.conf
 kubectl create -f deployments/ghost.yaml
 ```
 
+```
+kubectl describe deployment ghost
+```
+
 ### Expose the Ghost deployment
 
 ```
 kubectl create -f services/ghost.yaml
 ```
 
+```
+gcloud compute firewall-rules create allow-130-211-0-0-22 \
+  --source-ranges 130.211.0.0/22  --allow tcp:32000
+```
+
 ### Create the Ghost ingress controller
 
 ```
 kubectl create -f ingress/ghost.yaml
+```
+
+```
+kubectl describe ingress ghost
 ```
 
 ### Scale the ghost deployment
@@ -100,7 +121,3 @@ kubectl scale deployment ghost --replicas=3
 
 ### Roll out a new version
 
-```
-gcloud compute firewall-rules create allow-130-211-0-0-22 \
-  --source-ranges 130.211.0.0/22  --allow tcp:32028
-```
