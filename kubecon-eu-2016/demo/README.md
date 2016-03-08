@@ -14,19 +14,32 @@ and deploy it using Kubernetes.
 
 Create a [Cloud SQL database instance](https://cloud.google.com/sql/docs/create-instance).
 
+#### Create the Ghost user and database
+
+Login to the mysql instance:
 
 ```
 mysql -u root -p -h <cloud-sql-host> --ssl -p
 ```
 
+Create the ghost user:
+
 ```
 CREATE USER 'ghost'@'%' IDENTIFIED BY '<database-password>';
+```
+
+Create the ghost database and grant access to the ghost user:
+
+```
 CREATE DATABASE ghost;
 GRANT ALL ON ghost.* TO 'ghost'@'%';
 FLUSH PRIVILEGES;
 ```
 
 ### TLS Certificates
+
+The tls directory includes a set of self-signed TLS certificates for testing Ghost with
+TLS support. The certs are valid for the `*.example.com` wildcard domain.
 
 ```
 ls -1 tls/
@@ -38,17 +51,21 @@ database-ca.crt
 tls.key
 ```
 
+> The database-ca.crt was downloaded from the Cloud SQL control panel.
+
 ## Deploying Ghost with Kubernetes
 
 ### Store Server Certificates
 
+In order to share our TLS certificates with pods, and loadbalancers created by Kubernetes
+we first need to store them in a Secret.
+
 ```
 kubectl create secret generic ghost-tls --from-file=tls/
 ```
-```
-secret "ghost-tls" created
-```
 
+> The `--from-file` flag will create a secrets entry under the `ghost-tls` secret 
+> for each file under the tls directory.
 
 ```
 kubectl describe secrets ghost-tls
@@ -72,13 +89,16 @@ tls.crt:         1440 bytes
 
 ### Store the Ghost configuration file in a Secret
 
+The Ghost configuration file holds database connection info, mail and general application
+settings. Since the configuration file includes sensitive data we will store it in a secret.
+
 ```
 kubectl create secret generic ghost --from-file=configs/config.js 
 ```
 
-```
-secret "ghost-tls" created
-```
+> Once a configuration file is stored in a secret you can reference it from other
+> Kubernetes objects such as deployments and pods.
+
 
 ```
 kubectl describe secret ghost
@@ -86,8 +106,16 @@ kubectl describe secret ghost
 
 ### Store the Ghost Nginx config in configmap
 
+Nginx will be used to proxy traffic to the Ghost server over localhost in the same Pod.
+The configuration required to do this is fairly simple and does not contain sensitive data
+so it can be stored in a ConfigMap:
+
 ```
 kubectl create configmap nginx-ghost --from-file=configs/ghost.conf
+```
+
+```
+kubectl describe configmap nginx-ghost
 ```
 
 ### Create the Ghost deployment
