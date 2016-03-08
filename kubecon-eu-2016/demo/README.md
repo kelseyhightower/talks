@@ -137,6 +137,12 @@ kubectl describe deployment ghost
 kubectl get replicaset
 ```
 
+### Deploy a canary
+
+```
+kubectl apply -f deployments/ghost-canary.yaml
+```
+
 ### Roll out a new version
 
 Edit `deployments/ghost.yaml` and update the image:
