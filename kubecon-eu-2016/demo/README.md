@@ -83,7 +83,7 @@ kubectl create -f deployments/ghost.yaml
 ### Expose the Ghost deployment
 
 ```
-kubectl expose deployment ghost --type=NodePort
+kubectl create -f services/ghost.yaml
 ```
 
 ### Create the Ghost ingress controller

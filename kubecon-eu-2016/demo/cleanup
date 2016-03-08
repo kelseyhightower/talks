@@ -1,0 +1,8 @@
+#!/bin/bash
+
+kubectl delete secret ghost-tls
+kubectl delete secret ghost
+kubectl delete configmap nginx-ghost
+kubectl delete deployments ghost
+kubectl delete service ghost
+kubectl delete ingress ghost
