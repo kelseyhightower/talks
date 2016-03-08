@@ -1,5 +1,13 @@
 # Kubernetes 1.2 Demo (Ghost)
 
+This tutorial will walk you through deploying [Ghost](https://ghost.org),
+A publishing platform for professional bloggers, using Kubernetes 1.2 features.
+
+At the end of this tutorial you will know how to containerize Ghost using Docker
+and deploy it using Kubernetes.
+
+![Ghost](ghost-screen-shot.png) 
+
 ## Prerequisites 
 
 ### Database
