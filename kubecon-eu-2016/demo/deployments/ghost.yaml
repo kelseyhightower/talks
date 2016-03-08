@@ -8,7 +8,7 @@ spec:
     metadata:
       labels:
         app: "ghost"
-        version: "0.7.8-4"
+        version: "0.7.7"
     spec:
       containers:
         - name: "nginx"
@@ -19,7 +19,7 @@ spec:
             - name: "nginx-conf"
               mountPath: "/etc/nginx/conf.d"
         - name: "ghost"
-          image: "kelseyhightower/ghost:0.7.8-4"
+          image: "kelseyhightower/ghost:0.7.7"
           env:
             - name: "NODE_ENV"
               value: "production"

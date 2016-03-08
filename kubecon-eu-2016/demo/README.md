@@ -119,5 +119,24 @@ kubectl describe ingress ghost
 kubectl scale deployment ghost --replicas=3
 ```
 
+```
+kubectl describe deployment ghost
+```
+
+```
+kubectl get replicaset
+```
+
 ### Roll out a new version
+
+Edit deployments/ghost.yaml
+
+```
+- name: "ghost"
+  image: "kelseyhightower/ghost:0.7.8"
+```
+
+```
+kubectl apply -f deployments/ghost.yaml
+```
 
