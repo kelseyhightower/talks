@@ -115,9 +115,17 @@ kubectl describe ingress ghost
 
 ### Scale the ghost deployment
 
+Edit deployments/ghost.yaml
+
 ```
-kubectl scale deployment ghost --replicas=3
+spec:
+  replicas: 3
 ```
+
+```
+kubectl apply -f deployments/ghost.yaml
+```
+
 
 ```
 kubectl describe deployment ghost
