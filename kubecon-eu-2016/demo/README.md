@@ -115,12 +115,14 @@ kubectl describe ingress ghost
 
 ### Scale the ghost deployment
 
-Edit deployments/ghost.yaml
+Edit `deployments/ghost.yaml` and update the number of replicas:
 
 ```
 spec:
   replicas: 3
 ```
+
+Update the ghost deployment:
 
 ```
 kubectl apply -f deployments/ghost.yaml
@@ -137,12 +139,14 @@ kubectl get replicaset
 
 ### Roll out a new version
 
-Edit deployments/ghost.yaml
+Edit `deployments/ghost.yaml` and update the image:
 
 ```
 - name: "ghost"
   image: "kelseyhightower/ghost:0.7.8"
 ```
+
+Update the ghost deployment:
 
 ```
 kubectl apply -f deployments/ghost.yaml
