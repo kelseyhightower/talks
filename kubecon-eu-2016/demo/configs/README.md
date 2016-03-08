@@ -10,8 +10,10 @@ configuration file.
 
 ## Configuring Ghost
 
-Use the [Ghost configuration guide](http://support.ghost.org/config)
-as a reference and substitute the following items:
+
+Copy the `config.example.js` config to `config.js`, then edit
+`config.js` using the [Ghost configuration guide](http://support.ghost.org/config)
+as a reference to substitute the following items:
 
 ```
 GhostURL
@@ -21,6 +23,7 @@ MailgunDomain
 MailgunUsername
 MailgunPassword
 ```
+
 
 ### Example Config
 
