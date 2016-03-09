@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: ghost
+spec:
+  containers:
+    - name: "ghost"
+      image: "kelseyhightower/ghost:0.7.8"
+      env:
+        - name: "NODE_ENV"
+          value: "test"
+        - name: "GHOST_CONFIG"
+          value: "/etc/ghost/config.js"
+      volumeMounts:
+         - name: "ghost"
+           mountPath: "/etc/ghost"
+  volumes:
+    - name: "ghost"
+      secret:
+        secretName: "ghost-test"
