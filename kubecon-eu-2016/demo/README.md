@@ -200,20 +200,25 @@ kubectl apply -f deployments/ghost.yaml
 ```
 
 
-## Sysadmins Administration  
+## Secrets Demo
 
 ```
-kubectl get pods -o wide
-```
-
-```
-kubectl drain <node> --force
+kubectl create secret generic ghost-test --from-file pods/config.js
 ```
 
 ```
-kubectl get nodes
+kubectl create -f pods/ghost.yaml
 ```
 
 ```
-kubectl uncordon <node>
+kubectl exec ghost /bin/cat /etc/ghost/config.js
+```
+
+```
+kubectl exec ghost /bin/mount
+```
+
+```
+...
+tmpfs on /etc/ghost type tmpfs (rw,relatime)
 ```
