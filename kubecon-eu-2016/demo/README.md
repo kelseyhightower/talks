@@ -174,7 +174,7 @@ kubectl describe deployment ghost
 kubectl get replicaset
 ```
 
-## Rolling Out Ghost Updates
+## Rolling Update Demo
 
 Deploy new versions of Ghost using the canary pattern.
 
