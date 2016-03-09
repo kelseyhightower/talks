@@ -149,6 +149,8 @@ kubectl create -f ingress/ghost.yaml
 kubectl describe ingress ghost
 ```
 
+## Scaling Out
+
 ### Scale the ghost deployment
 
 Edit `deployments/ghost.yaml` and update the number of replicas:
@@ -164,7 +166,6 @@ Update the ghost deployment:
 kubectl apply -f deployments/ghost.yaml
 ```
 
-
 ```
 kubectl describe deployment ghost
 ```
@@ -172,6 +173,10 @@ kubectl describe deployment ghost
 ```
 kubectl get replicaset
 ```
+
+## Rolling Out Ghost Updates
+
+Deploy new versions of Ghost using the canary pattern.
 
 ### Deploy a canary
 
@@ -194,3 +199,21 @@ Update the ghost deployment:
 kubectl apply -f deployments/ghost.yaml
 ```
 
+
+## Sysadmins Administration  
+
+```
+kubectl get pods -o wide
+```
+
+```
+kubectl drain <node> --force
+```
+
+```
+kubectl get nodes
+```
+
+```
+kubectl uncordon <node>
+```
