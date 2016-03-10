@@ -3,18 +3,37 @@ kind: Deployment
 metadata:
   name: ghost
 spec:
-  replicas: 1
+  replicas: 5
   template:
     metadata:
       labels:
         app: "ghost"
-        version: "0.7.7"
+        track: "stable"
     spec:
       containers:
         - name: "nginx"
-          image: "nginx:1.7.9"
+          image: "nginx:1.9.12"
           ports:
             - containerPort: 80
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/usr/sbin/nginx","-s","quit"]
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 80
+              scheme: HTTP
+            initialDelaySeconds: 10
+            periodSeconds: 30
+            timeoutSeconds: 5
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 80
+              scheme: HTTP
+            initialDelaySeconds: 5
+            timeoutSeconds: 1
           volumeMounts:
             - name: "nginx-conf"
               mountPath: "/etc/nginx/conf.d"
@@ -25,6 +44,14 @@ spec:
               value: "production"
             - name: "GHOST_CONFIG"
               value: "/etc/ghost/config.js"
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 2368
+              scheme: HTTP
+            initialDelaySeconds: 10
+            periodSeconds: 30
+            timeoutSeconds: 1
           volumeMounts:
             - name: "ghost"
               mountPath: "/etc/ghost"
