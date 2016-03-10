@@ -2,9 +2,7 @@
 
 This tutorial will walk you through deploying [Ghost](https://ghost.org),
 A publishing platform for professional bloggers, using Kubernetes 1.2 features.
-
-At the end of this tutorial you will know how to containerize Ghost using Docker
-and deploy it using Kubernetes.
+This is the live demo that was given at KubeCon EU 2016.
 
 ![Ghost](ghost-screen-shot.png) 
 
@@ -53,7 +51,30 @@ tls.key
 
 > The database-ca.crt was downloaded from the Cloud SQL control panel.
 
-## Deploying Ghost with Kubernetes
+## Secrets Demo
+
+```
+kubectl create secret generic ghost-test --from-file pods/config.js
+```
+
+```
+kubectl create -f pods/ghost.yaml
+```
+
+```
+kubectl exec ghost /bin/cat /etc/ghost/config.js
+```
+
+```
+kubectl exec ghost /bin/mount
+```
+
+```
+...
+tmpfs on /etc/ghost type tmpfs (rw,relatime)
+```
+
+## Deployment Demo
 
 ### Store Server Certificates
 
@@ -118,16 +139,6 @@ kubectl create configmap nginx-ghost --from-file=configs/ghost.conf
 kubectl describe configmap nginx-ghost
 ```
 
-### Create the Ghost deployment
-
-```
-kubectl create -f deployments/ghost.yaml
-```
-
-```
-kubectl describe deployment ghost
-```
-
 ### Expose the Ghost deployment
 
 ```
@@ -149,7 +160,17 @@ kubectl create -f ingress/ghost.yaml
 kubectl describe ingress ghost
 ```
 
-## Scaling Out
+### Create the Ghost deployment
+
+```
+kubectl create -f deployments/ghost.yaml
+```
+
+```
+kubectl describe deployment ghost
+```
+
+## Scale Demo
 
 ### Scale the ghost deployment
 
@@ -200,25 +221,4 @@ kubectl apply -f deployments/ghost.yaml
 ```
 
 
-## Secrets Demo
 
-```
-kubectl create secret generic ghost-test --from-file pods/config.js
-```
-
-```
-kubectl create -f pods/ghost.yaml
-```
-
-```
-kubectl exec ghost /bin/cat /etc/ghost/config.js
-```
-
-```
-kubectl exec ghost /bin/mount
-```
-
-```
-...
-tmpfs on /etc/ghost type tmpfs (rw,relatime)
-```
