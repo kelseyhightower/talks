@@ -5,6 +5,7 @@ var config;
 config = {
   production: {
     url: '{{.GhostURL}}',
+    urlSSL: '{{.GhostSSLURL}}',
     forceAdminSSL: true,
     database: {
       client: 'mysql',
