@@ -275,6 +275,7 @@ sudo mv inspector.conf  /etc/nginx/conf.d/
 ```
 sudo docker run -d --net=host \
   -v /etc/nginx/conf.d:/etc/nginx/conf.d \
+  nginx
 ```
 
 
