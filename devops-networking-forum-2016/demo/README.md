@@ -34,20 +34,16 @@ gcloud compute instances create lb0 \
   --boot-disk-type "pd-ssd"
 ```
 
-### Build runc
+### Install runc
 
 ```
 gcloud compute ssh core@machine0
 ```
 
 ```
-git clone https://github.com/opencontainers/runc
-cd runc
-docker build -t runc_test -f script/test_Dockerfile .
-docker build -t runc_dev .
-docker create --name=runc_dev runc_dev
-docker cp runc_dev:/go/src/github.com/opencontainers/runc/runc .
-docker rm runc_dev
+sudo mkdir -p /opt/bin
+sudo curl -o /opt/bin/runc https://storage.googleapis.com/hightowerlabs/runc
+sudo chmod +x /opt/bin/runc
 ```
 
 ## Inspector Demo
@@ -57,7 +53,12 @@ gcloud compute ssh core@machine0
 ```
 
 ```
-./inspector
+sudo curl -o /opt/bin/inspector https://storage.googleapis.com/hightowerlabs/inspector
+sudo chmod +x /opt/bin/inspector
+```
+
+```
+sudo inspector
 ```
 
 > Visit http://104.154.36.232
@@ -77,17 +78,17 @@ gcloud compute ssh core@machine0
 ```
 
 ```
-mkdir -p container/rootfs
+mkdir -p container/rootfs/etc
 ```
 ```
 cp /etc/resolv.conf container/rootfs/etc/
 cp /etc/hosts container/rootfs/etc/
-curl -O container/config.json https:///config.json
-curl https:///inspector.tar | tar -xvf -C container/rootfs/ 
+cp /opt/bin/inspector container/rootfs/
+curl -o container/config.json https://storage.googleapis.com/hightowerlabs/config.json
 ```
 
 ```
-sudo ~/runc/runc start -b container/ container0
+sudo runc start -b container container0
 ```
 
 ### Inspector Container - Network Namespace
