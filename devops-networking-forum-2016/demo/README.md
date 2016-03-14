@@ -153,8 +153,8 @@ sudo ip netns exec inspector bash
 ifconfig -a
 ip addr add 10.10.0.2/24 dev veth0
 ip addr add 127.0.0.1 dev lo
-ip link veth0 set up
-ip link lo set up
+ip link set veth0 up
+ip link set lo up
 ip route add default via 10.10.0.1 dev veth0
 ```
 
