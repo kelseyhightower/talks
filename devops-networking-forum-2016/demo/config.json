@@ -18,10 +18,6 @@
          },
          {
             "type":"mount"
-         },
-         {
-            "type":"network",
-            "path": "/var/run/netns/container0"
          }
       ],
       "resources":{}

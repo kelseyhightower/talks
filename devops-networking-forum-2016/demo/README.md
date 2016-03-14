@@ -46,7 +46,12 @@ sudo curl -o /opt/bin/runc https://storage.googleapis.com/hightowerlabs/runc
 sudo chmod +x /opt/bin/runc
 ```
 
+> Repeat for machine1
+
+
 ## Inspector Demo
+
+### Inspector Binary
 
 ```
 gcloud compute ssh core@machine0
@@ -61,15 +66,7 @@ sudo chmod +x /opt/bin/inspector
 sudo inspector
 ```
 
-> Visit http://104.154.36.232
-
-```
-gcloud compute instances list
-NAME     ZONE          MACHINE_TYPE  PREEMPTIBLE INTERNAL_IP EXTERNAL_IP     STATUS
-lb0      us-central1-a n1-standard-2             10.240.0.4  104.197.238.18  RUNNING
-machine0 us-central1-a n1-standard-2             10.240.0.3  104.154.36.232  RUNNING
-machine1 us-central1-a n1-standard-2             10.240.0.5  104.154.27.180  RUNNING
-```
+> Visit http://machine0
 
 ### Inspector Container - Host Networking
 
@@ -77,27 +74,43 @@ machine1 us-central1-a n1-standard-2             10.240.0.5  104.154.27.180  RUN
 gcloud compute ssh core@machine0
 ```
 
-```
-mkdir -p container/rootfs/etc
-```
-```
-cp /etc/resolv.conf container/rootfs/etc/
-cp /etc/hosts container/rootfs/etc/
-cp /opt/bin/inspector container/rootfs/
-curl -o container/config.json https://storage.googleapis.com/hightowerlabs/config.json
-```
+Download OCI config
 
 ```
-sudo runc start -b container container0
+curl -O https://storage.googleapis.com/hightowerlabs/config.json
 ```
 
-### Inspector Container - Network Namespace
+Create inspector container root directory:
+
+```
+mkdir -p inspector/rootfs/etc
+```
+
+Populate the inspector container root directory:
+
+```
+cp /etc/resolv.conf inspector/rootfs/etc/
+cp /etc/hosts inspector/rootfs/etc/
+cp /opt/bin/inspector inspector/rootfs/
+cp config.json inspector/
+```
+
+Start the inspector container:
+
+```
+sudo runc start -b inspector inspector
+```
+
+> Repeat these steps for machine1
+
+
+### Network Namespaces in Action
 
 ```
 gcloud compute ssh core@machine0
 ```
 
-### Create container bridge
+Create the `containers` bridge:
 
 ```
 sudo brctl addbr containers
@@ -106,25 +119,37 @@ sudo ip link set dev containers up
 sudo ip addr add 10.10.0.1/24 dev containers
 ```
 
-### Create container interface
+Create the inspector namespace:
 
 ```
-sudo ip netns add container0
-sudo ip netns list
+sudo ip netns add inspector
 ```
+
+Create a veth0 pair:
 
 ```
 sudo ip link add veth0 type veth peer name br-veth0
-sudo ip link set veth0 netns container0
 ```
 
+Connect one end of the veth pair to the containers bridge:
+
 ```
-brctl show containers
 sudo brctl addif containers br-veth0
 ```
 
+Move one end of the veth0 pair into the inspector network namespace:
+
 ```
-sudo ip netns exec container0 bash
+sudo ip link set veth0 netns inspector
+```
+
+Configure the inspector network namespace:
+
+```
+sudo ip netns exec inspector bash
+```
+
+```
 ifconfig -a
 ip addr add 10.10.0.2/24 dev veth0
 ip addr add 127.0.0.1 dev lo
@@ -133,18 +158,87 @@ ip link lo set up
 ip route add default via 10.10.0.1 dev veth0
 ```
 
-## Create Routes
+```
+exit
+```
 
+
+Repeat these steps on machine1
+
+> Use 10.10.1.1/24 for the container bridge and 10.10.1.2/24 for veth0
+
+
+### Cross host networking
+
+#### Terminal 1
+
+```
+gcloud compute ssh core@machine0
+```
+
+```
+sudo ip netns exec inspector bash
+```
+
+```
+ping 10.10.1.2
+```
+
+#### Terminal 2
+
+```
+gcloud compute ssh core@machine1
+```
+
+```
+sudo ip netns exec inspector bash
+```
+
+```
+ping 10.10.0.2
+```
+
+#### Create Routes
 
 ```
 gcloud compute routes create default-route-10-10-0-0-24 \
   --destination-range 10.10.0.0/24 \
   --next-hop-instance machine0
+```
   
+```
 gcloud compute routes create default-route-10-10-1-0-24 \
   --destination-range 10.10.1.0/24 \
   --next-hop-instance machine1
 ```
+
+
+### Inspector Container - Network Namespace
+
+```
+gcloud compute ssh core@machine0
+```
+
+Edit `container/config.json`
+
+```
+"linux":{
+    "namespaces":[ 
+        ...
+        {
+            "type":"network",
+            "path": "/var/run/netns/inspector"
+         }
+    ],
+    ...  
+},
+```
+
+```
+sudo runc start -b container inspector
+```
+
+> Repeat for machine1
 
 
 ## Load Balance with nginx
@@ -181,4 +275,19 @@ sudo mv inspector.conf  /etc/nginx/conf.d/
 ```
 sudo docker run -d --net=host \
   -v /etc/nginx/conf.d:/etc/nginx/conf.d \
+```
+
+
+## Automate it all with Kubernetes
+
+```
+kubectl run inspector --image=gcr.io/kuar/inspector:2.0.0 --port=80
+```
+
+```
+kubectl expose rc inspector --type=LoadBalancer
+```
+
+```
+kubectl scale rc inspector --replicas=10
 ```
