@@ -235,7 +235,7 @@ Edit `container/config.json`
 ```
 
 ```
-sudo runc start -b container inspector
+sudo runc start -b inspector inspector
 ```
 
 > Repeat for machine1
