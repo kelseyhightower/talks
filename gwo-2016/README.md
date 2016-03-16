@@ -67,5 +67,5 @@ kubectl scale rc nginx --replicas=3
 ### Upgrading Applications
 
 ```
-kubectl rollingupdate nginx --image=nginx:1.9.12
+kubectl rollingupdate nginx --image=nginx:1.9.12 --update-period=5s
 ```
