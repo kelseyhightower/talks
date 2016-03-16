@@ -1,9 +1,9 @@
 # GWO Demo
 
-## Operating System Demo
+## Single System Demo
 
 ```
-gcloud compute ssh machine0
+gcloud compute ssh core@machine0
 ```
 
 ```
@@ -15,7 +15,7 @@ df -h
 ```
 
 ```
-docker run -d --name=nginx1 nginx:1.7.9
+docker run -d nginx:1.7.9
 ```
 
 ```
@@ -23,16 +23,24 @@ gcloud compute ssh machine1
 ```
 
 ```
-docker run -d --name=nginx2 nginx:1.7.9
+docker run -d nginx:1.7.9
 ```
 
-## Manging Resources
+### Manging Resources
 
-Review the spread sheet. Pick a new machine to add more instances too.
+```
+gcloud compute ssh machine1
+```
 
-docker run -d --name=nginx3 nginx:1.7.9
+```
+docker run -d nginx:1.7.9
+```
 
-## Upgrading Applications
+```
+ps -ax -o pid,psr,cmd
+```
+
+### Upgrading Applications
 
 ```
 docker stop nginx1
@@ -40,7 +48,7 @@ docker rm nginx1
 docker run -d --name=nginx1 nginx:1.9.12
 ```
 
-## Using a Distribute Operating System
+## Distribute Operating System Demo
 
 ```
 kubectl get nodes
@@ -53,6 +61,8 @@ kubectl run nginx --image=nginx:1.7.9
 ```
 kubectl expose rc nginx --type=LoadBalancer --port=80
 ```
+
+### Managing Resources
 
 ```
 kubectl scale rc nginx --replicas=3
