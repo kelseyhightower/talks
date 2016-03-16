@@ -11,11 +11,11 @@ top
 ```
 
 ```
-df -h
+ps -ax -o pid,psr,cmd
 ```
 
 ```
-docker run -d nginx:1.7.9
+docker run -d -P nginx:1.7.9
 ```
 
 ```
@@ -23,7 +23,7 @@ gcloud compute ssh machine1
 ```
 
 ```
-docker run -d nginx:1.7.9
+docker run -d -P nginx:1.7.9
 ```
 
 ### Manging Resources
@@ -33,19 +33,15 @@ gcloud compute ssh machine1
 ```
 
 ```
-docker run -d nginx:1.7.9
-```
-
-```
-ps -ax -o pid,psr,cmd
+docker run -d -P nginx:1.7.9
 ```
 
 ### Upgrading Applications
 
 ```
-docker stop nginx1
-docker rm nginx1
-docker run -d --name=nginx1 nginx:1.9.12
+docker stop <cid>
+docker rm <cid>
+docker run -d -P nginx:1.9.12
 ```
 
 ## Distribute Operating System Demo
